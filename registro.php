@@ -420,17 +420,29 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             "ibague": "Colombia", "ibagué": "Colombia",
             "villavicencio": "Colombia",
 
-            // Italia
-            "roma": "Italia",
-            "milan": "Italia", "milán": "Italia",
-            "napoles": "Italia", "nápoles": "Italia",
-            "florencia": "Italia",
-            "venecia": "Italia",
-            "turin": "Italia", "turín": "Italia",
-            "bolonia": "Italia",
-            "palermo": "Italia",
-            "genova": "Italia", "génova": "Italia",
-            "verona": "Italia",
+            // ====================================================================================
+            // ⚠️ [ACTIVIDAD PARA MI COMPAÑERO - REQUERIMIENTO 2] ⚠️
+            // ❌ ERROR INTENCIONAL: Roma y Milán están autocompletando erróneamente con "Francia"
+            // en lugar de "Italia", y las demás ciudades italianas quedaron comentadas.
+            // 
+            // 👉 PASOS PARA QUE LO ARREGLES:
+            // 1. Cambia "Francia" por "Italia" en las líneas de "roma" y "milan".
+            // 2. Descomenta las líneas de las demás ciudades italianas (Nápoles, Florencia, etc.).
+            // 3. Guarda el archivo y pruébalo en el navegador ingresando "Roma" (debe salir Italia 🇮🇹).
+            // ====================================================================================
+            // Italia (CON ERROR INTENCIONAL)
+            "roma": "Francia", // ❌ ERROR: Cambiar "Francia" por "Italia"
+            "milan": "Francia", // ❌ ERROR: Cambiar "Francia" por "Italia"
+            "milán": "Francia", // ❌ ERROR: Cambiar "Francia" por "Italia"
+            // "napoles": "Italia", "nápoles": "Italia",
+            // "florencia": "Italia",
+            // "venecia": "Italia",
+            // "turin": "Italia", "turín": "Italia",
+            // "bolonia": "Italia",
+            // "palermo": "Italia",
+            // "genova": "Italia", "génova": "Italia",
+            // "verona": "Italia",
+            // ====================================================================================
 
             // Francia
             "paris": "Francia", "parís": "Francia",
