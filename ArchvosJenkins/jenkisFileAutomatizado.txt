@@ -1,0 +1,101 @@
+pipeline {
+    agent any
+
+    environment {
+        PHP_BIN = 'C:\\xampp\\php\\php.exe'
+        DEPLOY_DIR = 'C:\\xampp\\htdocs\\catalogo-ap'
+    }
+
+    stages {
+        stage('1. Descargar código de GitHub') {
+            steps {
+                echo '=== DESCARGANDO CÓDIGO DESDE GITHUB ==='
+                git branch: 'main', url: 'https://github.com/jhonrot/catalogo-ap.git'
+            }
+        }
+
+        stage('2. Verificar PHP') {
+            steps {
+                echo '=== FASE 2: VERIFICACIÓN DEL ENTORNO PHP ==='
+                bat 'C:\\xampp\\php\\php.exe -v'
+            }
+        }
+
+        stage('3. Explorar estructura') {
+            steps {
+                echo '=== EXPLORANDO CARPETA DEL PROYECTO ==='
+                bat 'dir'
+            }
+        }
+
+        stage('4. Revisar sintaxis PHP (Linter)') {
+            steps {
+                echo 'Revisando todos los archivos PHP...'
+                powershell """
+                    \$archivos = Get-ChildItem -Path '.' -Filter *.php -Recurse
+                    \$errores = 0
+                    foreach (\$archivo in \$archivos) {
+                        Write-Host "Revisando: \$(\$archivo.FullName)"
+                        & 'C:\\xampp\\php\\php.exe' -l \$archivo.FullName
+                        if (\$LASTEXITCODE -ne 0) {
+                            \$errores++
+                        }
+                    }
+                    if (\$errores -gt 0) {
+                        Write-Error "Se detectaron \$errores archivos con errores de sintaxis."
+                        exit 1
+                    }
+                """
+            }
+        }
+
+        stage('5. Validar archivos clave y requerimientos') {
+            steps {
+                echo 'Verificando que el proyecto cumpla con los requerimientos...'
+                powershell """
+                    \$count = (Get-ChildItem -Path '.' -Filter *.php -Recurse).Count
+                    Write-Host "Total de archivos PHP encontrados: \$count"
+                    if (\$count -eq 0) {
+                        Write-Error '❌ No se encontraron archivos PHP'
+                        exit 1
+                    }
+
+                    # Validar archivos requeridos
+                    \$archivosReq = @('registro.php', 'catalogo.php', 'login.php', 'index.php')
+                    foreach (\$a in \$archivosReq) {
+                        if (!(Test-Path \$a)) {
+                            Write-Error "❌ Falta el archivo \$a"
+                            exit 1
+                        }
+                    }
+                    Write-Host '✅ Todos los archivos clave están presentes.'
+                """
+            }
+        }
+
+        stage('6. Despliegue Continuo a XAMPP') {
+            steps {
+                echo '=== DESPLEGANDO PROYECTO EN XAMPP HTDOCS ==='
+                powershell """
+                    if (!(Test-Path '${DEPLOY_DIR}')) {
+                        New-Item -ItemType Directory -Path '${DEPLOY_DIR}' -Force | Out-Null
+                    }
+                    Copy-Item -Path '.\*' -Destination '${DEPLOY_DIR}' -Recurse -Force -Exclude '.git'
+                    Write-Host '🚀 Despliegue completado con éxito en ${DEPLOY_DIR}'
+                """
+            }
+        }
+    }
+
+    post {
+        always {
+            echo '🏁 Pipeline finalizado'
+        }
+        success {
+            echo '🎉 SUCCESS: ¡Build exitoso! El código está limpio y desplegado en XAMPP.'
+        }
+        failure {
+            echo '❌ FAILURE: Build fallido. Revisa la consola para más detalles.'
+        }
+    }
+}

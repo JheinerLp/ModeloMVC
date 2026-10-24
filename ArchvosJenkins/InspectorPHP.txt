@@ -1,0 +1,66 @@
+pipeline {
+    agent any
+
+    environment {
+        PROJECT_DIR = 'C:\\xampp\\htdocs\\catalogo-ap'
+        PHP_BIN = 'C:\\xampp\\php\\php.exe'
+    }
+
+    stages {
+        stage('1. Verificar PHP') {
+            steps {
+                echo '=== INSPECCIÓN DEL PROYECTO CATALOGO-AP ==='
+                echo 'Verificando entorno PHP...'
+                bat "\"${PHP_BIN}\" -v"
+            }
+        }
+
+        stage('2. Explorar estructura') {
+            steps {
+                echo '=== EXPLORANDO CARPETA DEL PROYECTO ==='
+                bat "dir ${PROJECT_DIR}"
+            }
+        }
+
+        stage('3. Revisar sintaxis PHP') {
+            steps {
+                echo 'Revisando todos los archivos PHP con PowerShell...'
+                powershell """
+                    \$archivos = Get-ChildItem -Path '${PROJECT_DIR}' -Filter *.php -Recurse
+                    foreach (\$archivo in \$archivos) {
+                        Write-Host "Revisando: \$(\$archivo.FullName)"
+                        & '${PHP_BIN}' -l \$archivo.FullName
+                    }
+                """
+            }
+        }
+
+        stage('4. Validar archivos clave') {
+            steps {
+                echo 'Verificando que el proyecto no esté vacío...'
+                powershell """
+                    \$count = (Get-ChildItem -Path '${PROJECT_DIR}' -Filter *.php -Recurse).Count
+                    Write-Host "Total de archivos PHP encontrados: \$count"
+                    if (\$count -gt 0) {
+                        Write-Host '✅ El proyecto contiene archivos PHP válidos'
+                    } else {
+                        Write-Error '❌ No se encontraron archivos PHP en la ruta especificada'
+                        exit 1
+                    }
+                """
+            }
+        }
+    }
+
+    post {
+        always {
+            echo '🏁 Inspección finalizada'
+        }
+        success {
+            echo '🎉 SUCCESS: ¡Build exitoso! El proyecto catalogo-ap está limpio de errores de sintaxis.'
+        }
+        failure {
+            echo '❌ FAILURE: Build fallido. Revisa la ruta o los errores de sintaxis arriba.'
+        }
+    }
+}

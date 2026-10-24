@@ -1,0 +1,7 @@
+# Archivos del sistema y temporales
+*.tmp
+*.log
+.vscode/
+.idea/
+Thumbs.db
+Desktop.ini
