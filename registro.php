@@ -9,7 +9,7 @@ $errores = [];
 // Catálogo de ciudades por país (Colombia, Italia, Francia)
 $catalogo_ciudades = [
     'Colombia' => [
-        'Bogotá', 'Medellín', 'Cali', 'Barranquilla', 'Cartagena',
+        'Bogotá', 'Medellin', 'Cali', 'Barranquilla', 'Cartagena',
         'Bucaramanga', 'Pereira', 'Santa Marta', 'Manizales', 'Cúcuta',
         'Pasto', 'Armenia', 'Ibagué', 'Villavicencio'
     ],
