@@ -6,6 +6,11 @@ $mensaje = '';
 $tipo_mensaje = '';
 $errores = [];
 
+// Generar token CSRF si no existe
+if (empty($_SESSION['csrf_token'])) {
+    $_SESSION['csrf_token'] = bin2hex(random_bytes(32));
+}
+
 // Catálogo de ciudades por país (Colombia, Italia, Francia)
 $catalogo_ciudades = [
     'Colombia' => [
@@ -42,6 +47,12 @@ $datos = [
 ];
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+    // Validación de seguridad CSRF
+    $csrf_token = $_POST['csrf_token'] ?? '';
+    if (!hash_equals($_SESSION['csrf_token'] ?? '', $csrf_token)) {
+        $errores['seguridad'] = 'Error de seguridad: Token CSRF inválido o expirado. Por favor recarga el formulario.';
+    }
+
     // Conservar datos ingresados
     $datos['numero_documento'] = trim($_POST['numero_documento'] ?? '');
     $datos['nombre']           = trim($_POST['nombre'] ?? '');
@@ -146,6 +157,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                     if ($stmt->execute()) {
                         $mensaje = '¡Registro exitoso! Ya puedes iniciar sesión con tu nueva cuenta.';
                         $tipo_mensaje = 'success';
+                        // Regenerar token CSRF tras registro exitoso
+                        $_SESSION['csrf_token'] = bin2hex(random_bytes(32));
                         // Limpiar formulario tras registro exitoso
                         $datos = [
                             'numero_documento' => '',
@@ -172,7 +185,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $tipo_mensaje = 'danger';
         }
     } else {
-        $mensaje = 'Se encontraron errores en el formulario. Los datos ingresados se han conservado para su corrección.';
+        $mensaje = isset($errores['seguridad']) ? $errores['seguridad'] : 'Se encontraron errores en el formulario. Los datos ingresados se han conservado para su corrección.';
         $tipo_mensaje = 'danger';
     }
 }
@@ -207,6 +220,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                         <?php endif; ?>
 
                         <form method="POST" action="registro.php" novalidate id="formRegistro">
+                            <input type="hidden" name="csrf_token" value="<?php echo htmlspecialchars($_SESSION['csrf_token'] ?? ''); ?>">
                             <!-- Número de Documento -->
                             <div class="mb-3">
                                 <label for="numero_documento" class="form-label fw-semibold">

@@ -7,52 +7,67 @@ if(isset($_SESSION['user_id'])) {
     exit();
 }
 
+// Generar token CSRF si no existe
+if (empty($_SESSION['csrf_token'])) {
+    $_SESSION['csrf_token'] = bin2hex(random_bytes(32));
+}
+
 $mensaje = '';
 $tipo_mensaje = '';
 $correo = '';
 
 if($_SERVER['REQUEST_METHOD'] == 'POST') {
-    $correo = trim($_POST['correo'] ?? '');
-    $password = $_POST['password'] ?? '';
-    
-    if(empty($correo) || empty($password)) {
-        $mensaje = 'Todos los campos son obligatorios.';
+    $csrf_token = $_POST['csrf_token'] ?? '';
+    if (!hash_equals($_SESSION['csrf_token'] ?? '', $csrf_token)) {
+        $mensaje = 'Error de seguridad: Token CSRF inválido o expirado. Por favor intenta de nuevo.';
         $tipo_mensaje = 'danger';
     } else {
-        try {
-            $database = new Database();
-            $db = $database->getConnection();
-            
-            if ($db) {
-                $query = "SELECT id, numero_documento, nombre, apellidos, correo, password FROM usuarios WHERE correo = :correo";
-                $stmt = $db->prepare($query);
-                $stmt->bindParam(':correo', $correo);
-                $stmt->execute();
+        $correo = trim($_POST['correo'] ?? '');
+        $password = $_POST['password'] ?? '';
+        
+        if(empty($correo) || empty($password)) {
+            $mensaje = 'Todos los campos son obligatorios.';
+            $tipo_mensaje = 'danger';
+        } else {
+            try {
+                $database = new Database();
+                $db = $database->getConnection();
                 
-                if($stmt->rowCount() > 0) {
-                    $user = $stmt->fetch(PDO::FETCH_ASSOC);
+                if ($db) {
+                    $query = "SELECT id, numero_documento, nombre, apellidos, correo, password FROM usuarios WHERE correo = :correo";
+                    $stmt = $db->prepare($query);
+                    $stmt->bindParam(':correo', $correo);
+                    $stmt->execute();
                     
-                    if(password_verify($password, $user['password'])) {
-                        $_SESSION['user_id'] = $user['id'];
-                        $_SESSION['user_name'] = $user['nombre'] . ' ' . $user['apellidos'];
-                        $_SESSION['user_email'] = $user['correo'];
-                        header("Location: catalogo.php");
-                        exit();
+                    if($stmt->rowCount() > 0) {
+                        $user = $stmt->fetch(PDO::FETCH_ASSOC);
+                        
+                        if(password_verify($password, $user['password'])) {
+                            // Prevenir fijación de sesión (Session Fixation)
+                            session_regenerate_id(true);
+                            $_SESSION['user_id'] = $user['id'];
+                            $_SESSION['user_name'] = $user['nombre'] . ' ' . $user['apellidos'];
+                            $_SESSION['user_email'] = $user['correo'];
+                            // Regenerar token CSRF para la sesión autenticada
+                            $_SESSION['csrf_token'] = bin2hex(random_bytes(32));
+                            header("Location: catalogo.php");
+                            exit();
+                        } else {
+                            $mensaje = 'Contraseña incorrecta. Por favor intente de nuevo.';
+                            $tipo_mensaje = 'danger';
+                        }
                     } else {
-                        $mensaje = 'Contraseña incorrecta. Por favor intente de nuevo.';
+                        $mensaje = 'No existe una cuenta registrada con este correo electrónico.';
                         $tipo_mensaje = 'danger';
                     }
                 } else {
-                    $mensaje = 'No existe una cuenta registrada con este correo electrónico.';
+                    $mensaje = 'No se pudo conectar a la base de datos MySQL.';
                     $tipo_mensaje = 'danger';
                 }
-            } else {
-                $mensaje = 'No se pudo conectar a la base de datos MySQL.';
+            } catch(Exception $e) {
+                $mensaje = 'Error del sistema: ' . $e->getMessage();
                 $tipo_mensaje = 'danger';
             }
-        } catch(Exception $e) {
-            $mensaje = 'Error del sistema: ' . $e->getMessage();
-            $tipo_mensaje = 'danger';
         }
     }
 }
@@ -87,6 +102,7 @@ if($_SERVER['REQUEST_METHOD'] == 'POST') {
                         <?php endif; ?>
                         
                         <form method="POST" action="login.php">
+                            <input type="hidden" name="csrf_token" value="<?php echo htmlspecialchars($_SESSION['csrf_token'] ?? ''); ?>">
                             <div class="mb-3">
                                 <label for="correo" class="form-label fw-semibold">
                                     <i class="bi bi-envelope me-1 text-primary"></i>Correo Electrónico
