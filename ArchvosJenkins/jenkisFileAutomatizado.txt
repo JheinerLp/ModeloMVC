@@ -10,7 +10,7 @@ pipeline {
         stage('1. Descargar código de GitHub') {
             steps {
                 echo '=== DESCARGANDO CÓDIGO DESDE GITHUB ==='
-                git branch: 'main', url: 'https://github.com/jhonrot/catalogo-ap.git'
+                git branch: 'main', url: 'https://github.com/waltyer/catalogo-ap.git'
             }
         }
 
