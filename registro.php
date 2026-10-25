@@ -6,10 +6,15 @@ $mensaje = '';
 $tipo_mensaje = '';
 $errores = [];
 
+// Generar token CSRF si no existe
+if (empty($_SESSION['csrf_token'])) {
+    $_SESSION['csrf_token'] = bin2hex(random_bytes(32));
+}
+
 // Catálogo de ciudades por país (Colombia, Italia, Francia)
 $catalogo_ciudades = [
     'Colombia' => [
-        'Bogotá', 'Medellín', 'Cali', 'Barranquilla', 'Cartagena',
+        'Bogotá', 'Medellin', 'Cali', 'Barranquilla', 'Cartagena',
         'Bucaramanga', 'Pereira', 'Santa Marta', 'Manizales', 'Cúcuta',
         'Pasto', 'Armenia', 'Ibagué', 'Villavicencio'
     ],
@@ -33,7 +38,7 @@ foreach ($catalogo_ciudades as $pais_nombre => $ciudades) {
 
 // Inicialización de campos para conservar la información en caso de error
 $datos = [
-    'numero_documento' => '',
+    'documento' => '',
     'nombre' => '',
     'apellidos' => '',
     'correo' => '',
@@ -42,8 +47,14 @@ $datos = [
 ];
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+    // Validación de seguridad CSRF
+    $csrf_token = $_POST['csrf_token'] ?? '';
+    if (!hash_equals($_SESSION['csrf_token'] ?? '', $csrf_token)) {
+        $errores['seguridad'] = 'Error de seguridad: Token CSRF inválido o expirado. Por favor recarga el formulario.';
+    }
+
     // Conservar datos ingresados
-    $datos['numero_documento'] = trim($_POST['numero_documento'] ?? '');
+    $datos['documento'] = trim($_POST['documento'] ?? '');
     $datos['nombre']           = trim($_POST['nombre'] ?? '');
     $datos['apellidos']        = trim($_POST['apellidos'] ?? '');
     $datos['correo']           = trim($_POST['correo'] ?? '');
@@ -59,10 +70,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     }
 
     // 1. Validaciones campo por campo señalando la ubicación exacta del error
-    if (empty($datos['numero_documento'])) {
-        $errores['numero_documento'] = 'El número de documento es obligatorio.';
-    } elseif (!preg_match('/^[0-9A-Za-z\.\-]{5,20}$/', $datos['numero_documento'])) {
-        $errores['numero_documento'] = 'El documento debe tener entre 5 y 20 caracteres válidos.';
+    if (empty($datos['documento'])) {
+        $errores['documento'] = 'El número de documento es obligatorio.';
+    } elseif (!preg_match('/^[0-9A-Za-z\.\-]{5,20}$/', $datos['documento'])) {
+        $errores['documento'] = 'El documento debe tener entre 5 y 20 caracteres válidos.';
     }
 
     if (empty($datos['nombre'])) {
@@ -113,16 +124,16 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
             if ($db) {
                 // Verificar si el documento o correo ya existen
-                $query = "SELECT numero_documento, correo FROM usuarios WHERE numero_documento = :documento OR correo = :correo";
+                $query = "SELECT documento, correo FROM usuarios WHERE documento = :documento OR correo = :correo";
                 $stmt = $db->prepare($query);
-                $stmt->bindParam(':documento', $datos['numero_documento']);
+                $stmt->bindParam(':documento', $datos['documento']);
                 $stmt->bindParam(':correo', $datos['correo']);
                 $stmt->execute();
                 $registros = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
                 foreach ($registros as $reg) {
-                    if ($reg['numero_documento'] === $datos['numero_documento']) {
-                        $errores['numero_documento'] = 'Este número de documento ya se encuentra registrado.';
+                    if ($reg['documento'] === $datos['documento']) {
+                        $errores['documento'] = 'Este número de documento ya se encuentra registrado.';
                     }
                     if (strcasecmp($reg['correo'], $datos['correo']) === 0) {
                         $errores['correo'] = 'Este correo electrónico ya se encuentra registrado.';
@@ -132,10 +143,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 if (empty($errores)) {
                     // Insertar nuevo usuario
                     $password_hash = password_hash($password, PASSWORD_DEFAULT);
-                    $query = "INSERT INTO usuarios (numero_documento, nombre, apellidos, correo, ciudad, pais, password) 
+                    $query = "INSERT INTO usuarios (documento, nombre, apellidos, correo, ciudad, pais, password) 
                               VALUES (:documento, :nombre, :apellidos, :correo, :ciudad, :pais, :password)";
                     $stmt = $db->prepare($query);
-                    $stmt->bindParam(':documento', $datos['numero_documento']);
+                    $stmt->bindParam(':documento', $datos['documento']);
                     $stmt->bindParam(':nombre', $datos['nombre']);
                     $stmt->bindParam(':apellidos', $datos['apellidos']);
                     $stmt->bindParam(':correo', $datos['correo']);
@@ -146,9 +157,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                     if ($stmt->execute()) {
                         $mensaje = '¡Registro exitoso! Ya puedes iniciar sesión con tu nueva cuenta.';
                         $tipo_mensaje = 'success';
+                        // Regenerar token CSRF tras registro exitoso
+                        $_SESSION['csrf_token'] = bin2hex(random_bytes(32));
                         // Limpiar formulario tras registro exitoso
                         $datos = [
-                            'numero_documento' => '',
+                            'documento' => '',
                             'nombre' => '',
                             'apellidos' => '',
                             'correo' => '',
@@ -172,7 +185,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $tipo_mensaje = 'danger';
         }
     } else {
-        $mensaje = 'Se encontraron errores en el formulario. Los datos ingresados se han conservado para su corrección.';
+        $mensaje = isset($errores['seguridad']) ? $errores['seguridad'] : 'Se encontraron errores en el formulario. Los datos ingresados se han conservado para su corrección.';
         $tipo_mensaje = 'danger';
     }
 }
@@ -207,21 +220,22 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                         <?php endif; ?>
 
                         <form method="POST" action="registro.php" novalidate id="formRegistro">
+                            <input type="hidden" name="csrf_token" value="<?php echo htmlspecialchars($_SESSION['csrf_token'] ?? ''); ?>">
                             <!-- Número de Documento -->
                             <div class="mb-3">
-                                <label for="numero_documento" class="form-label fw-semibold">
+                                <label for="documento" class="form-label fw-semibold">
                                     <i class="bi bi-card-heading me-1 text-primary"></i>Número de Documento
                                 </label>
                                 <input type="text" 
-                                       class="form-control <?php echo isset($errores['numero_documento']) ? 'is-invalid' : (!empty($datos['numero_documento']) ? 'is-valid' : ''); ?>" 
-                                       id="numero_documento" 
-                                       name="numero_documento" 
-                                       value="<?php echo htmlspecialchars($datos['numero_documento']); ?>" 
+                                       class="form-control <?php echo isset($errores['documento']) ? 'is-invalid' : (!empty($datos['documento']) ? 'is-valid' : ''); ?>" 
+                                       id="documento" 
+                                       name="documento" 
+                                       value="<?php echo htmlspecialchars($datos['documento']); ?>" 
                                        placeholder="Ej: 1020304050" 
                                        required>
-                                <?php if(isset($errores['numero_documento'])): ?>
+                                <?php if(isset($errores['documento'])): ?>
                                     <div class="invalid-feedback d-block">
-                                        <i class="bi bi-x-circle me-1"></i><?php echo $errores['numero_documento']; ?>
+                                        <i class="bi bi-x-circle me-1"></i><?php echo $errores['documento']; ?>
                                     </div>
                                 <?php endif; ?>
                             </div>

@@ -1,81 +1,492 @@
-/* Estilos personalizados para Catálogo AP */
+
+/
+/* ==================================================
+   CATALOGO AP - INTERFAZ MEJORADA
+   Fondo, tarjetas, botones, formularios y modales
+   ================================================== */
+
+:root {
+    --color-principal: #2864a5;
+    --color-principal-hover: #1e4f86;
+    --color-secundario: #6558d9;
+    --color-fondo: #f5f8fc;
+    --color-texto: #252842;
+    --color-borde: #dce6f2;
+    --color-exito: #16845b;
+    --sombra-suave: 0 5px 22px rgba(37, 57, 85, 0.09);
+    --sombra-hover: 0 14px 32px rgba(40, 78, 125, 0.16);
+}
+
+/* ==================================================
+   FONDO GENERAL
+   La imagen se muestra sin una capa de color encima
+   ================================================== */
+
+html {
+    min-height: 100%;
+}
+
 body {
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
     min-height: 100vh;
+    color: var(--color-texto);
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    line-height: 1.6;
+
+    background-color: #ffffff;
+    background-image: url("img/fondo.jpg");
+    background-size: cover;
+    background-position: center center;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
 }
 
 body.bg-light {
-    background: #f4f6fa !important;
+    background-color: #ffffff !important;
+    background-image: url("img/fondo.jpg") !important;
+    background-size: cover !important;
+    background-position: center center !important;
+    background-repeat: no-repeat !important;
+    background-attachment: fixed;
 }
 
-.card {
-    border-radius: 16px;
-    border: none;
-    transition: transform 0.25s ease, box-shadow 0.25s ease;
-}
+/* ==================================================
+   BARRA DE NAVEGACION
+   ================================================== */
 
-.card:hover {
-    transform: translateY(-4px);
-    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08) !important;
-}
-
-.product-card {
-    transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
-}
-
-.product-card:hover {
-    transform: translateY(-6px);
-    box-shadow: 0 12px 30px rgba(102, 126, 234, 0.18) !important;
-}
-
-.btn-primary {
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    border: none;
-    transition: all 0.25s ease;
-}
-
-.btn-primary:hover {
-    background: linear-gradient(135deg, #5a6fd8 0%, #683f94 100%);
-    transform: translateY(-2px);
-    box-shadow: 0 6px 18px rgba(102, 126, 234, 0.4);
+.navbar.bg-primary {
+    background: linear-gradient(
+        120deg,
+        #24588f,
+        #397fc0
+    ) !important;
 }
 
 .navbar {
-    box-shadow: 0 4px 15px rgba(0,0,0,0.12);
+    box-shadow: 0 4px 18px rgba(35, 71, 112, 0.17);
 }
 
-.badge {
-    font-weight: 500;
-    letter-spacing: 0.3px;
+.navbar-brand {
+    letter-spacing: -0.3px;
+    font-weight: 700;
 }
 
-/* Modales estilizados */
-.modal-content {
+.navbar .nav-link {
+    color: #ffffff !important;
+    transition: opacity 0.2s ease;
+}
+
+.navbar .nav-link:hover {
+    opacity: 0.82;
+}
+
+/* ==================================================
+   ENCABEZADOS Y TEXTOS
+   ================================================== */
+
+h1, h2, h3, h4, h5 {
+    color: var(--color-texto);
+    letter-spacing: -0.35px;
+}
+
+.text-primary {
+    color: var(--color-principal) !important;
+}
+
+/* ==================================================
+   TARJETAS
+   ================================================== */
+
+.card {
+    background-color: #ffffff;
+    border: 1px solid var(--color-borde);
     border-radius: 18px;
+    box-shadow: var(--sombra-suave);
+    transition: box-shadow 0.25s ease, transform 0.25s ease;
+}
+
+.product-card {
+    background-color: #ffffff;
     overflow: hidden;
 }
 
-.modal-header {
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    border-bottom: none;
+.product-card:hover {
+    transform: translateY(-5px);
+    box-shadow: var(--sombra-hover) !important;
 }
 
-/* Campos con error y retroalimentación clara */
+.product-card .card-body {
+    padding: 1.5rem;
+    background-color: #ffffff;
+}
+
+.product-card .card-title {
+    line-height: 1.4;
+    overflow-wrap: anywhere;
+}
+
+.product-card .card-text {
+    line-height: 1.7;
+}
+
+.product-card .bg-light {
+    background-color: #f0f6fd !important;
+}
+
+.product-card .rounded-circle {
+    min-width: 58px;
+    min-height: 58px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Tarjetas del inicio de sesión y otros formularios */
+.login-card,
+.card.login-card {
+    background-color: #ffffff;
+    border: 1px solid #dce8f5;
+    border-radius: 20px;
+    box-shadow: 0 12px 35px rgba(35, 71, 112, 0.15);
+}
+
+/* Encabezados de tarjetas */
+.card-header {
+    background-color: #edf5ff;
+    color: #234d78;
+    border-bottom: 1px solid #dce8f5;
+}
+
+/* ==================================================
+   BOTONES
+   ================================================== */
+
+.btn-primary,
+.btn-primary:visited {
+    color: #ffffff !important;
+    background: linear-gradient(
+        120deg,
+        var(--color-principal),
+        #397fc0
+    );
+    border: 1px solid transparent;
+    border-radius: 11px;
+    transition: transform 0.2s ease,
+                box-shadow 0.2s ease,
+                background 0.2s ease;
+}
+
+.btn-primary:hover,
+.btn-primary:focus,
+.btn-primary:focus-visible,
+.btn-primary:active {
+    color: #ffffff !important;
+    background: var(--color-principal-hover) !important;
+    border-color: var(--color-principal-hover) !important;
+    box-shadow: 0 6px 16px rgba(40, 100, 165, 0.25);
+}
+
+.btn-primary:hover {
+    transform: translateY(-2px);
+}
+
+/* Texto blanco en botones de inicio de sesión */
+button.btn,
+a.btn {
+    color: #ffffff;
+}
+
+.btn-outline-light {
+    border-radius: 10px;
+}
+
+.btn-success {
+    border-radius: 10px;
+}
+
+/* ==================================================
+   ETIQUETAS Y PROMOCIONES
+   ================================================== */
+
+.badge {
+    font-weight: 600;
+    letter-spacing: 0.15px;
+}
+
+.product-card .badge.bg-danger {
+    box-shadow: 0 4px 12px rgba(220, 53, 69, 0.16);
+}
+
+/* ==================================================
+   PRECIOS
+   ================================================== */
+
+.product-card .text-success,
+.modal .text-success {
+    color: var(--color-exito) !important;
+}
+
+.product-card .border {
+    border-color: var(--color-borde) !important;
+}
+
+/* ==================================================
+   VENTANAS MODALES
+   ================================================== */
+
+.modal-content {
+    background-color: #ffffff;
+    border: none;
+    border-radius: 20px;
+    overflow: hidden;
+    box-shadow: 0 20px 60px rgba(26, 40, 65, 0.2);
+}
+
+.modal-header.bg-primary {
+    background: linear-gradient(
+        120deg,
+        #24588f,
+        #397fc0
+    ) !important;
+    color: #ffffff;
+    border-bottom: none;
+    padding: 1.25rem 1.5rem;
+}
+
+.modal-header.bg-primary .modal-title {
+    color: #ffffff;
+}
+
+.modal-body {
+    line-height: 1.7;
+}
+
+.modal-body .bg-light {
+    background-color: #f0f6fd !important;
+}
+
+.modal-footer {
+    border-top: 1px solid var(--color-borde);
+}
+
+/* ==================================================
+   FORMULARIOS Y VALIDACION
+   ================================================== */
+
+.form-control,
+.form-select {
+    border: 1px solid #cbdced;
+    border-radius: 9px;
+}
+
+.form-control:focus,
+.form-select:focus {
+    border-color: #5595d0;
+    box-shadow: 0 0 0 0.2rem rgba(76, 139, 201, 0.18);
+}
+
 .form-control.is-invalid {
     border-color: #dc3545;
     background-color: #fff8f8;
-    box-shadow: 0 0 0 0.2rem rgba(220, 53, 69, 0.15);
 }
 
 .form-control.is-valid {
     border-color: #198754;
     background-color: #f8fff9;
-    box-shadow: 0 0 0 0.2rem rgba(25, 135, 84, 0.15);
 }
 
 .invalid-feedback {
+    font-size: 0.875rem;
     font-weight: 500;
-    font-size: 0.85rem;
-    margin-top: 0.35rem;
+}
+
+/* ==================================================
+   ALERTAS Y NOTIFICACIONES
+   ================================================== */
+
+.alert {
+    border: none;
+    border-radius: 14px;
+}
+
+.toast {
+    border-radius: 12px;
+}
+
+/* ==================================================
+   BANNER DE INTEGRACION CONTINUA
+   ================================================== */
+
+.banner-ci {
+    background-color: #24588f;
+    border-color: rgba(255, 255, 255, 0.25) !important;
+    color: #ffffff !important;
+}
+
+.banner-ci,
+.banner-ci p,
+.banner-ci span,
+.banner-ci strong,
+.banner-ci .text-muted,
+.banner-ci .small {
+    color: #ffffff !important;
+}
+
+.banner-ci .badge {
+    background-color: #16845b !important;
+    color: #ffffff !important;
+    border: 1px solid rgba(255, 255, 255, 0.35);
+}
+
+/* ==================================================
+   PIE DE PAGINA
+   ================================================== */
+
+footer {
+    margin-top: 2rem;
+}
+
+footer.bg-dark {
+    background-color: #202c40 !important;
+}
+
+/* ==================================================
+   ACCESIBILIDAD: MOVIMIENTO REDUCIDO
+   ================================================== */
+
+@media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+        scroll-behavior: auto !important;
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+    }
+
+    .product-card:hover,
+    .btn-primary:hover {
+        transform: none;
+    }
+}
+
+/* ==================================================
+   AJUSTES PARA CELULARES
+   ================================================== */
+
+@media (max-width: 576px) {
+    .product-card .card-body {
+        padding: 1.15rem;
+    }
+
+    .modal-body {
+        padding: 1.15rem !important;
+    }
+
+    .modal-header {
+        padding: 1rem;
+    }
+
+    .product-card .h4 {
+        font-size: 1.25rem;
+    }
+
+    body,
+    body.bg-light {
+        background-attachment: scroll;
+    }
+}
+
+/* Botón Registrarse */
+button.btn-primary[type="submit"] {
+    background: linear-gradient(135deg, #2864a5, #174779) !important;
+    color: #ffffff !important;
+    border: 1px solid #174779 !important;
+    border-radius: 12px;
+    font-weight: 600;
+    box-shadow: 0 5px 14px rgba(40, 100, 165, 0.22);
+    transition: all 0.25s ease;
+}
+
+/* Efecto al pasar el cursor */
+button.btn-primary[type="submit"]:hover {
+    background: linear-gradient(135deg, #1e4f86, #12385f) !important;
+    color: #ffffff !important;
+    border-color: #12385f !important;
+    transform: translateY(-2px);
+    box-shadow: 0 7px 18px rgba(40, 100, 165, 0.3);
+}
+
+/* Al hacer clic o seleccionar el botón */
+button.btn-primary[type="submit"]:focus,
+button.btn-primary[type="submit"]:active {
+    color: #ffffff !important;
+    background: #174779 !important;
+    border-color: #174779 !important;
+}
+
+/* Icono y texto siempre blancos */
+button.btn-primary[type="submit"] i {
+    color: #ffffff !important;
+}
+
+/* Botón Registrarse: siempre visible */
+a.btn.btn-outline-primary,
+a.btn.btn-outline-primary:link,
+a.btn.btn-outline-primary:visited {
+    display: inline-flex !important;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+
+    background-color: #ffffff !important;
+    color: #174779 !important;
+    border: 2px solid #2864a5 !important;
+
+    border-radius: 12px;
+    font-weight: 600;
+    text-decoration: none !important;
+    opacity: 1 !important;
+    visibility: visible !important;
+    box-shadow: 0 3px 8px rgba(40, 100, 165, 0.12);
+}
+
+a.btn.btn-outline-primary i {
+    color: #174779 !important;
+}
+
+a.btn.btn-outline-primary:hover,
+a.btn.btn-outline-primary:focus {
+    background-color: #2864a5 !important;
+    color: #ffffff !important;
+    border-color: #2864a5 !important;
+}
+
+a.btn.btn-outline-primary:hover i,
+a.btn.btn-outline-primary:focus i {
+    color: #ffffff !important;
+}
+/* Botón Iniciar Sesión */
+a.btn.btn-primary {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    background: linear-gradient(135deg, #2864a5, #174779) !important;
+    color: #ffffff !important;
+    border: 1px solid #174779 !important;
+    border-radius: 12px;
+    font-weight: 600;
+    text-decoration: none !important;
+    transition: all 0.25s ease;
+}
+
+a.btn.btn-primary i {
+    color: #ffffff !important;
+}
+
+a.btn.btn-primary:hover {
+    background: #12385f !important;
+    color: #ffffff !important;
+    transform: translateY(-2px);
+    box-shadow: 0 5px 14px rgba(40, 100, 165, 0.25);
 }

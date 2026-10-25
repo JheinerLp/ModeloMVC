@@ -83,7 +83,7 @@ function obtenerIconoCategoria($categoria) {
     </nav>
 
     <!-- Banner de notificación de Integración Continua (Requerimiento 4) -->
-    <div class="bg-white border-bottom py-2 shadow-sm mb-4">
+    <div class="banner-ci border-bottom py-3 shadow-sm mb-4">
         <div class="container d-flex flex-wrap align-items-center justify-content-between">
             <div class="d-flex align-items-center text-muted small py-1">
                 <span class="badge bg-success me-2"><i class="bi bi-check2-all me-1"></i>Despliegue Continuo</span>
@@ -129,8 +129,8 @@ function obtenerIconoCategoria($categoria) {
             <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
                 <?php foreach($productos as $producto): ?>
                     <?php 
-                        $precio_orig = floatval($producto['precio_original']);
-                        $precio_prom = floatval($producto['precio_promocion']);
+                        $precio_orig = floatval($producto['precio_normal']);
+                        $precio_prom = floatval($producto['precio_promo']);
                         $ahorro = max(0, $precio_orig - $precio_prom);
                         $descuento = ($precio_orig > 0) ? round(($ahorro / $precio_orig) * 100) : 0;
                         $iconoCat = obtenerIconoCategoria($producto['categoria'] ?? '');
@@ -314,12 +314,18 @@ function obtenerIconoCategoria($categoria) {
     </div>
 
     <!-- Pie de página informativo -->
-    <footer class="bg-dark text-white py-4 mt-auto border-top">
-        <div class="container text-center">
-            <p class="mb-1 fw-bold">Proyecto Catálogo AP - Práctica de DevOps & Integración Continua</p>
-            <p class="text-muted small mb-0">Implementación de Git + Jenkins | Pipeline Automatizado</p>
-        </div>
-    </footer>
+  
+<footer class="py-4 mt-auto border-top" style="background-color: #17365D; color: #FFFFFF;">
+    <div class="container text-center">
+        <p class="mb-1 fw-bold" style="color: #FFFFFF;">
+            Proyecto Catálogo AP - Práctica de DevOps & Integración Continua
+        </p>
+        <p class="small mb-0" style="color: #E2EAF4;">
+            Implementación de Git + Jenkins | Pipeline Automatizado
+        </p>
+    </div>
+</footer>
+
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script>

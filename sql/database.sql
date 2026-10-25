@@ -4,7 +4,7 @@ USE catalogo_db;
 -- Tabla de usuarios
 CREATE TABLE IF NOT EXISTS usuarios (
     id INT AUTO_INCREMENT PRIMARY KEY,
-    numero_documento VARCHAR(20) UNIQUE NOT NULL,
+    documento VARCHAR(20) UNIQUE NOT NULL,
     nombre VARCHAR(100) NOT NULL,
     apellidos VARCHAR(100) NOT NULL,
     correo VARCHAR(150) UNIQUE NOT NULL,
@@ -19,8 +19,8 @@ CREATE TABLE IF NOT EXISTS productos (
     id INT AUTO_INCREMENT PRIMARY KEY,
     nombre VARCHAR(150) NOT NULL,
     descripcion TEXT,
-    precio_original DECIMAL(10, 2) NOT NULL,
-    precio_promocion DECIMAL(10, 2) NOT NULL,
+    precio_normal DECIMAL(10, 2) NOT NULL,
+    precio_promo DECIMAL(10, 2) NOT NULL,
     imagen VARCHAR(255),
     categoria VARCHAR(100),
     fecha_inicio DATE,
@@ -29,7 +29,7 @@ CREATE TABLE IF NOT EXISTS productos (
 );
 
 -- Insertar productos de ejemplo
-INSERT INTO productos (nombre, descripcion, precio_original, precio_promocion, imagen, categoria, fecha_inicio, fecha_fin) VALUES
+INSERT INTO productos (nombre, descripcion, precio_normal, precio_promo, imagen, categoria, fecha_inicio, fecha_fin) VALUES
 ('Laptop Gaming Pro', 'Laptop de alto rendimiento con 16GB RAM y 512GB SSD', 1200.00, 899.99, 'laptop.jpg', 'Electrónica', '2026-09-01', '2026-10-31'),
 ('Smartphone Ultra', 'Teléfono inteligente con cámara de 108MP', 899.00, 699.99, 'smartphone.jpg', 'Electrónica', '2026-09-15', '2026-10-15'),
 ('Auriculares Bluetooth', 'Auriculares inalámbricos con cancelación de ruido', 199.99, 129.99, 'auriculares.jpg', 'Accesorios', '2026-09-01', '2026-11-30'),
