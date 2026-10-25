@@ -188,19 +188,11 @@ function obtenerIconoCategoria($categoria) {
                                     Válido hasta: <strong><?php echo date('d/m/Y', strtotime($producto['fecha_fin'])); ?></strong>
                                 </div>
 
-                                <!-- ====================================================================================
-                                     ⚠️ [ACTIVIDAD PARA MI COMPAÑERA - REQUERIMIENTO 3] ⚠️
-                                     ❌ ERROR / TAREA PENDIENTE: El botón "Ver Detalles" no abre el modal con la
-                                     información adicional del producto porque le faltan los atributos de Bootstrap.
-                                     
-                                     👉 INSTRUCCIONES PARA ARREGLARLO:
-                                     Agrega dentro de la etiqueta <button> los siguientes dos atributos:
-                                         data-bs-toggle="modal" 
-                                         data-bs-target="#<?php echo $modalId; ?>"
-                                     ==================================================================================== -->
-                                <!-- Botón actualmente con error (no abre el modal al dar clic) -->
+                                <!-- Botón Ver Detalles con apertura de modal interactivo -->
                                 <button type="button" 
-                                        class="btn btn-primary w-100 py-2 fw-semibold d-flex align-items-center justify-content-center shadow-sm">
+                                        class="btn btn-primary w-100 py-2 fw-semibold d-flex align-items-center justify-content-center shadow-sm"
+                                        data-bs-toggle="modal" 
+                                        data-bs-target="#<?php echo $modalId; ?>">
                                     <i class="bi bi-eye-fill me-2"></i> Ver Detalles
                                 </button>
                             </div>

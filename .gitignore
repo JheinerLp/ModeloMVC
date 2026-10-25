@@ -1,6 +1,7 @@
 # Archivos del sistema y temporales
 *.tmp
 *.log
+*.pdf
 .vscode/
 .idea/
 Thumbs.db
