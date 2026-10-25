@@ -116,7 +116,7 @@ pipeline {
                     if (!(Test-Path '${DEPLOY_DIR}')) {
                         New-Item -ItemType Directory -Path '${DEPLOY_DIR}' -Force | Out-Null
                     }
-                    Copy-Item -Path '.\*' -Destination '${DEPLOY_DIR}' -Recurse -Force -Exclude '.git'
+                    Copy-Item -Path './*' -Destination '${DEPLOY_DIR}' -Recurse -Force -Exclude '.git'
                     Write-Host '🚀 Despliegue completado con éxito en el servidor web local.'
                 """
             }
