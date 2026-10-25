@@ -34,7 +34,7 @@ if($_SERVER['REQUEST_METHOD'] == 'POST') {
                 $db = $database->getConnection();
                 
                 if ($db) {
-                    $query = "SELECT id, numero_documento, nombre, apellidos, correo, password FROM usuarios WHERE correo = :correo";
+                    $query = "SELECT id, documento, nombre, apellidos, correo, password FROM usuarios WHERE correo = :correo";
                     $stmt = $db->prepare($query);
                     $stmt->bindParam(':correo', $correo);
                     $stmt->execute();

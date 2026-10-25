@@ -20,7 +20,7 @@ Este documento detalla la distribución de roles, la implementación técnica de
 ### 📌 Requerimiento 1 (1 pto): Persistencia de Datos y Señalización de Errores en Registro
 * **Archivo modificado**: `registro.php`
 * **Solución técnica**:
-  1. Se creó el array asociativo `$datos` para capturar y preservar los valores ingresados por el usuario (`numero_documento`, `nombre`, `apellidos`, `correo`, `ciudad`, `pais`).
+  1. Se creó el array asociativo `$datos` para capturar y preservar los valores ingresados por el usuario (`documento`, `nombre`, `apellidos`, `correo`, `ciudad`, `pais`).
   2. En caso de error, los campos del formulario mantienen sus valores mediante `value="<?php echo htmlspecialchars($datos['campo']); ?>"` en lugar de reiniciarse.
   3. Se diseñó el array asociativo `$errores` que evalúa individualmente cada campo (longitud, caracteres válidos, formato de correo, contraseñas coincidentes y unicidad en la base de datos).
   4. Si un campo presenta error, se le añade dinámicamente la clase `is-invalid` y se muestra un bloque `<div class="invalid-feedback">` debajo de este, señalando con precisión el problema al usuario.
