@@ -1,0 +1,222 @@
+<div class="container py-4">
+    <div class="row justify-content-center align-items-center">
+        <div class="col-md-7 col-lg-6">
+            <div class="card shadow-lg border-0">
+                <div class="card-header bg-primary text-white text-center py-3 rounded-top">
+                    <h3 class="mb-1"><i class="bi bi-person-plus-fill me-2"></i>Registro de Usuario</h3>
+                    <small class="text-white-50">Diligencia el formulario. Los datos se mantendrán si ocurre algún error.</small>
+                </div>
+                <div class="card-body p-4 p-md-5">
+
+                    <?php if(!empty($mensaje)): ?>
+                        <div class="alert alert-<?= $tipo_mensaje ?> alert-dismissible fade show d-flex align-items-center" role="alert">
+                            <i class="bi <?= ($tipo_mensaje == 'success') ? 'bi-check-circle-fill' : 'bi-exclamation-triangle-fill' ?> me-2 fs-5"></i>
+                            <div><?= $mensaje ?></div>
+                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                        </div>
+                    <?php endif; ?>
+
+                    <form method="POST" action="registro.php" novalidate id="formRegistro">
+                        <input type="hidden" name="csrf_token" value="<?= htmlspecialchars($_SESSION['csrf_token'] ?? '') ?>">
+                        
+                        <!-- Número de Documento -->
+                        <div class="mb-3">
+                            <label for="documento" class="form-label fw-semibold">
+                                <i class="bi bi-card-heading me-1 text-primary"></i>Número de Documento
+                            </label>
+                            <input type="text" 
+                                   class="form-control <?= isset($errores['documento']) ? 'is-invalid' : (!empty($datos['documento']) ? 'is-valid' : '') ?>" 
+                                   id="documento" 
+                                   name="documento" 
+                                   value="<?= htmlspecialchars($datos['documento'] ?? '') ?>" 
+                                   placeholder="Ej: 1020304050" 
+                                   required>
+                            <?php if(isset($errores['documento'])): ?>
+                                <div class="invalid-feedback d-block">
+                                    <i class="bi bi-x-circle me-1"></i><?= $errores['documento'] ?>
+                                </div>
+                            <?php endif; ?>
+                        </div>
+
+                        <!-- Nombres y Apellidos -->
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label for="nombre" class="form-label fw-semibold">
+                                    <i class="bi bi-person me-1 text-primary"></i>Nombre
+                                </label>
+                                <input type="text" 
+                                       class="form-control <?= isset($errores['nombre']) ? 'is-invalid' : (!empty($datos['nombre']) ? 'is-valid' : '') ?>" 
+                                       id="nombre" 
+                                       name="nombre" 
+                                       value="<?= htmlspecialchars($datos['nombre'] ?? '') ?>" 
+                                       placeholder="Ej: Carlos" 
+                                       required>
+                                <?php if(isset($errores['nombre'])): ?>
+                                    <div class="invalid-feedback d-block">
+                                        <i class="bi bi-x-circle me-1"></i><?= $errores['nombre'] ?>
+                                    </div>
+                                <?php endif; ?>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label for="apellidos" class="form-label fw-semibold">
+                                    <i class="bi bi-person me-1 text-primary"></i>Apellidos
+                                </label>
+                                <input type="text" 
+                                       class="form-control <?= isset($errores['apellidos']) ? 'is-invalid' : (!empty($datos['apellidos']) ? 'is-valid' : '') ?>" 
+                                       id="apellidos" 
+                                       name="apellidos" 
+                                       value="<?= htmlspecialchars($datos['apellidos'] ?? '') ?>" 
+                                       placeholder="Ej: Rodríguez" 
+                                       required>
+                                <?php if(isset($errores['apellidos'])): ?>
+                                    <div class="invalid-feedback d-block">
+                                        <i class="bi bi-x-circle me-1"></i><?= $errores['apellidos'] ?>
+                                    </div>
+                                <?php endif; ?>
+                            </div>
+                        </div>
+
+                        <!-- Correo Electrónico -->
+                        <div class="mb-3">
+                            <label for="correo" class="form-label fw-semibold">
+                                <i class="bi bi-envelope me-1 text-primary"></i>Correo Electrónico
+                            </label>
+                            <input type="email" 
+                                   class="form-control <?= isset($errores['correo']) ? 'is-invalid' : (!empty($datos['correo']) ? 'is-valid' : '') ?>" 
+                                   id="correo" 
+                                   name="correo" 
+                                   value="<?= htmlspecialchars($datos['correo'] ?? '') ?>" 
+                                   placeholder="nombre@correo.com" 
+                                   required>
+                            <?php if(isset($errores['correo'])): ?>
+                                <div class="invalid-feedback d-block">
+                                    <i class="bi bi-x-circle me-1"></i><?= $errores['correo'] ?>
+                                </div>
+                            <?php endif; ?>
+                        </div>
+
+                        <!-- Ciudad y País (Catálogo y Autocompletado) -->
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label for="ciudad" class="form-label fw-semibold">
+                                    <i class="bi bi-geo-alt-fill me-1 text-primary"></i>Ciudad
+                                    <span class="badge bg-secondary-subtle text-primary border" style="font-size: 0.72rem;">Catálogo</span>
+                                </label>
+                                <input list="lista-ciudades" 
+                                       type="text" 
+                                       class="form-control <?= isset($errores['ciudad']) ? 'is-invalid' : (!empty($datos['ciudad']) ? 'is-valid' : '') ?>" 
+                                       id="ciudad" 
+                                       name="ciudad" 
+                                       value="<?= htmlspecialchars($datos['ciudad'] ?? '') ?>" 
+                                       placeholder="Ej: Roma, Bogotá, París..." 
+                                       autocomplete="off" 
+                                       required>
+                                <datalist id="lista-ciudades">
+                                    <!-- Ciudades Colombia -->
+                                    <?php if(isset($catalogo_ciudades['Colombia'])): ?>
+                                        <?php foreach($catalogo_ciudades['Colombia'] as $c): ?>
+                                            <option value="<?= $c ?>">Colombia</option>
+                                        <?php endforeach; ?>
+                                    <?php endif; ?>
+                                    <!-- Ciudades Italia -->
+                                    <?php if(isset($catalogo_ciudades['Italia'])): ?>
+                                        <?php foreach($catalogo_ciudades['Italia'] as $c): ?>
+                                            <option value="<?= $c ?>">Italia</option>
+                                        <?php endforeach; ?>
+                                    <?php endif; ?>
+                                    <!-- Ciudades Francia -->
+                                    <?php if(isset($catalogo_ciudades['Francia'])): ?>
+                                        <?php foreach($catalogo_ciudades['Francia'] as $c): ?>
+                                            <option value="<?= $c ?>">Francia</option>
+                                        <?php endforeach; ?>
+                                    <?php endif; ?>
+                                </datalist>
+                                <?php if(isset($errores['ciudad'])): ?>
+                                    <div class="invalid-feedback d-block">
+                                        <i class="bi bi-x-circle me-1"></i><?= $errores['ciudad'] ?>
+                                    </div>
+                                <?php else: ?>
+                                    <small class="text-muted d-block mt-1" style="font-size: 0.8rem;">
+                                        Disponibles: Colombia, Italia y Francia
+                                    </small>
+                                <?php endif; ?>
+                            </div>
+
+                            <div class="col-md-6 mb-3">
+                                <label for="pais" class="form-label fw-semibold">
+                                    <i class="bi bi-flag-fill me-1 text-primary"></i>País
+                                    <span class="badge bg-success" style="font-size: 0.72rem;">Autocompletado</span>
+                                </label>
+                                <input type="text" 
+                                       class="form-control bg-light <?= isset($errores['pais']) ? 'is-invalid' : (!empty($datos['pais']) ? 'is-valid' : '') ?>" 
+                                       id="pais" 
+                                       name="pais" 
+                                       value="<?= htmlspecialchars($datos['pais'] ?? '') ?>" 
+                                       placeholder="Se llena automáticamente" 
+                                       readonly 
+                                       required>
+                                <?php if(isset($errores['pais'])): ?>
+                                    <div class="invalid-feedback d-block">
+                                        <i class="bi bi-x-circle me-1"></i><?= $errores['pais'] ?>
+                                    </div>
+                                <?php else: ?>
+                                    <small id="pais-helper" class="text-muted d-block mt-1" style="font-size: 0.8rem;">
+                                        <?= !empty($datos['pais']) ? 'País detectado: ' . htmlspecialchars($datos['pais']) : 'Selecciona una ciudad primero' ?>
+                                    </small>
+                                <?php endif; ?>
+                            </div>
+                        </div>
+
+                        <!-- Contraseñas -->
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label for="password" class="form-label fw-semibold">
+                                    <i class="bi bi-lock me-1 text-primary"></i>Contraseña
+                                </label>
+                                <input type="password" 
+                                       class="form-control <?= isset($errores['password']) ? 'is-invalid' : '' ?>" 
+                                       id="password" 
+                                       name="password" 
+                                       placeholder="Mínimo 6 caracteres" 
+                                       required>
+                                <?php if(isset($errores['password'])): ?>
+                                    <div class="invalid-feedback d-block">
+                                        <i class="bi bi-x-circle me-1"></i><?= $errores['password'] ?>
+                                    </div>
+                                <?php endif; ?>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label for="confirm_password" class="form-label fw-semibold">
+                                    <i class="bi bi-shield-check me-1 text-primary"></i>Confirmar Contraseña
+                                </label>
+                                <input type="password" 
+                                       class="form-control <?= isset($errores['confirm_password']) ? 'is-invalid' : '' ?>" 
+                                       id="confirm_password" 
+                                       name="confirm_password" 
+                                       placeholder="Repite la contraseña" 
+                                       required>
+                                <?php if(isset($errores['confirm_password'])): ?>
+                                    <div class="invalid-feedback d-block">
+                                        <i class="bi bi-x-circle me-1"></i><?= $errores['confirm_password'] ?>
+                                    </div>
+                                <?php endif; ?>
+                            </div>
+                        </div>
+
+                        <button type="submit" class="btn btn-primary w-100 py-2 fw-semibold mt-2 shadow-sm">
+                            <i class="bi bi-check2-circle me-1"></i> Registrarse
+                        </button>
+                    </form>
+
+                    <div class="text-center mt-4">
+                        <p class="mb-0 text-muted">¿Ya tienes una cuenta? <a href="login.php" class="fw-bold text-decoration-none">Inicia sesión aquí</a></p>
+                        <p class="mt-2 mb-0"><a href="index.php" class="text-muted small text-decoration-none"><i class="bi bi-arrow-left"></i> Volver al inicio</a></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Carga del script modularizado de autocompletado -->
+<script src="public/js/ciudades.js"></script>

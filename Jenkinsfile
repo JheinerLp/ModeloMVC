@@ -25,7 +25,7 @@ pipeline {
             }
         }
 
-        stage('3. Explorar Estructura del Proyecto (MVC)') {
+        stage('3. Explorar Estructura del Proyecto (MVC + HTML Views)') {
             steps {
                 echo '=============================================='
                 echo '  FASE 3: EXPLORANDO ARQUITECTURA MVC         '
@@ -59,7 +59,7 @@ pipeline {
             }
         }
 
-        stage('5. Validar Requerimientos Clave y Arquitectura MVC') {
+        stage('5. Validar Requerimientos Clave y Vistas HTML') {
             steps {
                 echo '=============================================='
                 echo '  FASE 5: VALIDACIÓN DE REQUERIMIENTOS Y MVC  '
@@ -75,10 +75,10 @@ pipeline {
                         'controllers/BaseController.php',
                         'controllers/UsuarioController.php',
                         'controllers/CatalogoController.php',
-                        'views/layouts/plantilla.php',
-                        'views/usuarios/listar.php',
-                        'views/usuarios/crear.php',
-                        'views/catalogo/listar.php',
+                        'views/layouts/plantilla.html',
+                        'views/usuarios/listar.html',
+                        'views/usuarios/crear.html',
+                        'views/catalogo/listar.html',
                         'public/index.php',
                         'public/css/style.css',
                         'public/js/ciudades.js',
@@ -91,26 +91,26 @@ pipeline {
 
                     foreach (\$req in \$archivosRequeridos) {
                         if (Test-Path \$req) {
-                            Write-Host "✅ Archivo / Componente MVC presente: \$req"
+                            Write-Host "✅ Archivo / Vista HTML presente: \$req"
                         } else {
                             Write-Error "❌ Falta el archivo requerido: \$req"
                             exit 1
                         }
                     }
 
-                    # Validar presencia del catálogo de ciudades (Col, Ita, Fra)
-                    \$contenidoRegistro = if (Test-Path 'views/usuarios/crear.php') { Get-Content 'views/usuarios/crear.php' -Raw } else { Get-Content 'registro.php' -Raw }
+                    # Validar presencia del catálogo de ciudades (Col, Ita, Fra) en vistas HTML
+                    \$contenidoRegistro = if (Test-Path 'views/usuarios/crear.html') { Get-Content 'views/usuarios/crear.html' -Raw } else { Get-Content 'registro.php' -Raw }
                     if (\$contenidoRegistro -match 'Colombia' -and \$contenidoRegistro -match 'Italia' -and \$contenidoRegistro -match 'Francia') {
-                        Write-Host '✅ Catálogo de ciudades (Colombia, Italia, Francia) validado correctamente.'
+                        Write-Host '✅ Catálogo de ciudades (Colombia, Italia, Francia) validado correctamente en HTML.'
                     } else {
                         Write-Error '❌ El catálogo de ciudades no contiene todos los países requeridos.'
                         exit 1
                     }
 
-                    # Validar presencia de 'Ver Detalles' en vistas y catálogo
-                    \$contenidoCatalogo = if (Test-Path 'views/catalogo/listar.php') { Get-Content 'views/catalogo/listar.php' -Raw } else { Get-Content 'catalogo.php' -Raw }
+                    # Validar presencia de 'Ver Detalles' en vistas HTML y catálogo
+                    \$contenidoCatalogo = if (Test-Path 'views/catalogo/listar.html') { Get-Content 'views/catalogo/listar.html' -Raw } else { Get-Content 'catalogo.php' -Raw }
                     if (\$contenidoCatalogo -match 'modalDetalle' -or \$contenidoCatalogo -match 'data-bs-toggle') {
-                        Write-Host '✅ Funcionalidad de modales para Ver Detalles validada correctamente.'
+                        Write-Host '✅ Funcionalidad de modales para Ver Detalles validada correctamente en HTML.'
                     } else {
                         Write-Error '❌ No se detectó la funcionalidad de modales en el catálogo.'
                         exit 1

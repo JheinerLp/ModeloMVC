@@ -15,23 +15,33 @@ class BaseController {
     }
 
     /**
-     * Renderiza una vista dentro de la plantilla maestra (views/layouts/plantilla.php)
-     * separando completamente el contenido HTML del diseño general.
+     * Renderiza una vista en formato .html (o .php como fallback) dentro de la plantilla maestra (views/layouts/plantilla.html).
      */
     protected function render($vista, $datos = [], $usarPlantilla = true) {
         extract($datos);
 
-        $vistaPath = __DIR__ . '/../views/' . $vista . '.php';
+        // Buscar primero la vista en formato .html, luego .php
+        $vistaPath = __DIR__ . '/../views/' . $vista . '.html';
         if (!file_exists($vistaPath)) {
-            die("Error: La vista '{$vista}' no fue encontrada en {$vistaPath}.");
+            $vistaPath = __DIR__ . '/../views/' . $vista . '.php';
+        }
+
+        if (!file_exists($vistaPath)) {
+            die("Error: La vista '{$vista}' no fue encontrada en formato .html ni .php en " . __DIR__ . "/../views/{$vista}.html");
         }
 
         if ($usarPlantilla) {
+            // Capturar el contenido procesado de la vista .html
             ob_start();
             require $vistaPath;
             $contenido = ob_get_clean();
 
-            $plantillaPath = __DIR__ . '/../views/layouts/plantilla.php';
+            // Buscar la plantilla maestra en formato .html, luego .php
+            $plantillaPath = __DIR__ . '/../views/layouts/plantilla.html';
+            if (!file_exists($plantillaPath)) {
+                $plantillaPath = __DIR__ . '/../views/layouts/plantilla.php';
+            }
+
             if (file_exists($plantillaPath)) {
                 require $plantillaPath;
             } else {
