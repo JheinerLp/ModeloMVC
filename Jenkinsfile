@@ -12,7 +12,6 @@ pipeline {
                 echo '=============================================='
                 echo '  FASE 1: DESCARGA Y CHECKOUT DESDE GIT       '
                 echo '=============================================='
-                // En Jenkins con Pipeline desde SCM o checkout scm:
                 checkout scm
             }
         }
@@ -26,10 +25,10 @@ pipeline {
             }
         }
 
-        stage('3. Explorar Estructura del Proyecto') {
+        stage('3. Explorar Estructura del Proyecto (MVC)') {
             steps {
                 echo '=============================================='
-                echo '  FASE 3: EXPLORANDO ARCHIVOS DEL PROYECTO    '
+                echo '  FASE 3: EXPLORANDO ARQUITECTURA MVC         '
                 echo '=============================================='
                 bat 'dir'
             }
@@ -60,33 +59,47 @@ pipeline {
             }
         }
 
-        stage('5. Validar Requerimientos Clave del Proyecto') {
+        stage('5. Validar Requerimientos Clave y Arquitectura MVC') {
             steps {
                 echo '=============================================='
-                echo '  FASE 5: VALIDACIÓN DE ARCHIVOS REQUERIDOS   '
+                echo '  FASE 5: VALIDACIÓN DE REQUERIMIENTOS Y MVC  '
                 echo '=============================================='
                 powershell """
                     \$archivosRequeridos = @(
+                        '.env',
+                        'routes/web.php',
+                        'config/database.php',
+                        'sql/database.sql',
+                        'models/Usuario.php',
+                        'models/Producto.php',
+                        'controllers/BaseController.php',
+                        'controllers/UsuarioController.php',
+                        'controllers/CatalogoController.php',
+                        'views/layouts/plantilla.php',
+                        'views/usuarios/listar.php',
+                        'views/usuarios/crear.php',
+                        'views/catalogo/listar.php',
+                        'public/index.php',
+                        'public/css/style.css',
+                        'public/js/ciudades.js',
                         'registro.php',
                         'catalogo.php',
                         'login.php',
                         'index.php',
-                        'config/database.php',
-                        'sql/database.sql',
                         'assets/style.css'
                     )
 
                     foreach (\$req in \$archivosRequeridos) {
                         if (Test-Path \$req) {
-                            Write-Host "✅ Archivo requerido presente: \$req"
+                            Write-Host "✅ Archivo / Componente MVC presente: \$req"
                         } else {
                             Write-Error "❌ Falta el archivo requerido: \$req"
                             exit 1
                         }
                     }
 
-                    # Validar presencia del catálogo de ciudades (Col, Ita, Fra) en registro.php
-                    \$contenidoRegistro = Get-Content 'registro.php' -Raw
+                    # Validar presencia del catálogo de ciudades (Col, Ita, Fra)
+                    \$contenidoRegistro = if (Test-Path 'views/usuarios/crear.php') { Get-Content 'views/usuarios/crear.php' -Raw } else { Get-Content 'registro.php' -Raw }
                     if (\$contenidoRegistro -match 'Colombia' -and \$contenidoRegistro -match 'Italia' -and \$contenidoRegistro -match 'Francia') {
                         Write-Host '✅ Catálogo de ciudades (Colombia, Italia, Francia) validado correctamente.'
                     } else {
@@ -94,12 +107,12 @@ pipeline {
                         exit 1
                     }
 
-                    # Validar presencia de 'Ver Detalles' en catalogo.php
-                    \$contenidoCatalogo = Get-Content 'catalogo.php' -Raw
+                    # Validar presencia de 'Ver Detalles' en vistas y catálogo
+                    \$contenidoCatalogo = if (Test-Path 'views/catalogo/listar.php') { Get-Content 'views/catalogo/listar.php' -Raw } else { Get-Content 'catalogo.php' -Raw }
                     if (\$contenidoCatalogo -match 'modalDetalle' -or \$contenidoCatalogo -match 'data-bs-toggle') {
                         Write-Host '✅ Funcionalidad de modales para Ver Detalles validada correctamente.'
                     } else {
-                        Write-Error '❌ No se detectó la funcionalidad de modales en catalogo.php.'
+                        Write-Error '❌ No se detectó la funcionalidad de modales en el catálogo.'
                         exit 1
                     }
                 """

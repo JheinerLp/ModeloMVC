@@ -1,25 +1,11 @@
 <?php
-session_start();
+/**
+ * Punto de entrada para Cierre de Sesión (Arquitectura MVC)
+ * Despacha la petición a UsuarioController::logout()
+ * 
+ * Controlador: controllers/UsuarioController.php -> logout()
+ */
+require_once __DIR__ . '/controllers/UsuarioController.php';
 
-// Limpiar todas las variables de sesión
-$_SESSION = [];
-
-// Si se usan cookies de sesión, borrarlas
-if (ini_get("session.use_cookies")) {
-    $params = session_get_cookie_params();
-    setcookie(
-        session_name(),
-        '',
-        time() - 42000,
-        $params["path"],
-        $params["domain"],
-        $params["secure"],
-        $params["httponly"]
-    );
-}
-
-// Destruir la sesión por completo
-session_destroy();
-header("Location: index.php");
-exit();
-?>
+$controller = new UsuarioController();
+$controller->logout();
