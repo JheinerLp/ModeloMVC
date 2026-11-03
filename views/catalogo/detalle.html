@@ -1,0 +1,162 @@
+<?php
+    $metricas = Producto::calcularMetricas($producto['precio_normal'], $producto['precio_promo']);
+    $precio_orig = $metricas['precio_normal'];
+    $precio_prom = $metricas['precio_promo'];
+    $ahorro = $metricas['ahorro'];
+    $descuento = $metricas['descuento'];
+    $iconoCat = Producto::obtenerIconoCategoria($producto['categoria'] ?? '');
+?>
+<div class="container py-4 pb-5">
+    <!-- Navegación de migas de pan -->
+    <nav aria-label="breadcrumb" class="mb-4">
+        <ol class="breadcrumb bg-transparent p-0 mb-0">
+            <li class="breadcrumb-item"><a href="catalogo.php" class="text-decoration-none fw-semibold"><i class="bi bi-grid-fill me-1"></i>Catálogo</a></li>
+            <li class="breadcrumb-item text-muted"><?= htmlspecialchars($producto['categoria'] ?? 'General') ?></li>
+            <li class="breadcrumb-item active text-dark fw-bold" aria-current="page"><?= htmlspecialchars($producto['nombre']) ?></li>
+        </ol>
+    </nav>
+
+    <div class="card shadow-lg border-0 overflow-hidden rounded-4">
+        <div class="card-header bg-gradient-primary text-white p-4 d-flex justify-content-between align-items-center">
+            <div class="d-flex align-items-center">
+                <a href="catalogo.php" class="btn btn-outline-light btn-sm me-3 rounded-pill shadow-sm">
+                    <i class="bi bi-arrow-left me-1"></i> Volver
+                </a>
+                <h4 class="mb-0 fw-bold"><i class="bi bi-info-circle-fill me-2"></i>Ficha Detallada del Producto</h4>
+            </div>
+            <span class="badge bg-light text-primary px-3 py-2 rounded-pill fw-bold">
+                Código: PRD-<?= str_pad($producto['id'], 4, '0', STR_PAD_LEFT) ?>
+            </span>
+        </div>
+
+        <div class="card-body p-4 p-lg-5">
+            <div class="row g-5 align-items-center">
+                <!-- Columna Izquierda: Imagen / Icono destacado y beneficios -->
+                <div class="col-lg-5 text-center">
+                    <div class="product-detail-visual p-5 rounded-4 shadow-sm position-relative mb-4">
+                        <span class="position-absolute top-0 start-0 m-3 badge bg-danger fs-6 px-3 py-2 rounded-pill shadow-sm">
+                            <i class="bi bi-lightning-charge-fill me-1"></i> <?= $descuento ?>% OFF
+                        </span>
+                        
+                        <div class="product-hero-icon my-4">
+                            <i class="bi <?= $iconoCat ?> text-primary" style="font-size: 7rem;"></i>
+                        </div>
+
+                        <span class="badge bg-primary-subtle text-primary border border-primary-subtle px-3 py-2 rounded-pill fs-6">
+                            <?= htmlspecialchars($producto['categoria'] ?? 'General') ?>
+                        </span>
+                    </div>
+
+                    <!-- Insignias de confianza -->
+                    <div class="row g-2 text-start">
+                        <div class="col-6">
+                            <div class="p-3 bg-light rounded-3 border h-100 text-center">
+                                <i class="bi bi-shield-check text-success fs-3 d-block mb-1"></i>
+                                <span class="small fw-bold text-dark d-block">Garantía Oficial</span>
+                                <span class="text-muted very-small">12 meses directo con fábrica</span>
+                            </div>
+                        </div>
+                        <div class="col-6">
+                            <div class="p-3 bg-light rounded-3 border h-100 text-center">
+                                <i class="bi bi-truck text-primary fs-3 d-block mb-1"></i>
+                                <span class="small fw-bold text-dark d-block">Envío Prioritario</span>
+                                <span class="text-muted very-small">Colombia, Italia y Francia</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Columna Derecha: Especificaciones completas y llamada a la acción -->
+                <div class="col-lg-7">
+                    <div class="d-flex align-items-center gap-2 mb-2">
+                        <span class="badge bg-success-subtle text-success border border-success-subtle px-3 py-1 rounded-pill">
+                            <i class="bi bi-check-circle-fill me-1"></i>En Stock - Disponibilidad Inmediata
+                        </span>
+                        <span class="badge bg-warning-subtle text-dark border border-warning-subtle px-3 py-1 rounded-pill">
+                            <i class="bi bi-fire me-1"></i>Promoción Activa
+                        </span>
+                    </div>
+
+                    <h1 class="display-6 fw-bold text-dark mb-3"><?= htmlspecialchars($producto['nombre']) ?></h1>
+
+                    <div class="price-box-modern p-4 rounded-4 mb-4">
+                        <div class="d-flex flex-wrap justify-content-between align-items-center">
+                            <div>
+                                <span class="text-muted text-decoration-line-through d-block fs-6">
+                                    Precio habitual: $<?= number_format($precio_orig, 2) ?> USD
+                                </span>
+                                <div class="d-flex align-items-baseline gap-2">
+                                    <span class="display-5 text-success fw-extrabold mb-0">
+                                        $<?= number_format($precio_prom, 2) ?>
+                                    </span>
+                                    <span class="text-muted fs-6">USD con IVA inc.</span>
+                                </div>
+                            </div>
+                            <div class="text-md-end mt-2 mt-md-0">
+                                <span class="badge bg-success fs-6 px-3 py-2 rounded-pill shadow-sm">
+                                    <i class="bi bi-piggy-bank me-1"></i> Ahorras $<?= number_format($ahorro, 2) ?>
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <h5 class="fw-bold text-dark mb-2"><i class="bi bi-card-text me-2 text-primary"></i>Descripción del Producto</h5>
+                    <p class="text-secondary lead fs-6 mb-4 lh-base">
+                        <?= nl2br(htmlspecialchars($producto['descripcion'])) ?>
+                    </p>
+
+                    <h5 class="fw-bold text-dark mb-3"><i class="bi bi-list-check me-2 text-primary"></i>Ficha Técnica y Condiciones</h5>
+                    <ul class="list-group list-group-flush mb-4 rounded-3 border">
+                        <li class="list-group-item d-flex justify-content-between align-items-center py-3">
+                            <span class="text-muted"><i class="bi bi-calendar-check me-2 text-primary"></i>Inicio de la Oferta:</span>
+                            <span class="fw-semibold text-dark"><?= !empty($producto['fecha_inicio']) ? date('d/m/Y', strtotime($producto['fecha_inicio'])) : 'Inmediato' ?></span>
+                        </li>
+                        <li class="list-group-item d-flex justify-content-between align-items-center py-3">
+                            <span class="text-muted"><i class="bi bi-calendar-x me-2 text-danger"></i>Vigencia Límite:</span>
+                            <span class="fw-bold text-danger"><?= !empty($producto['fecha_fin']) ? date('d/m/Y', strtotime($producto['fecha_fin'])) : 'Hasta agotar existencias' ?></span>
+                        </li>
+                        <li class="list-group-item d-flex justify-content-between align-items-center py-3">
+                            <span class="text-muted"><i class="bi bi-globe-americas me-2 text-primary"></i>Países con Envío Directo:</span>
+                            <span class="fw-semibold text-dark">🇨🇴 Colombia | 🇮🇹 Italia | 🇫🇷 Francia</span>
+                        </li>
+                        <li class="list-group-item d-flex justify-content-between align-items-center py-3">
+                            <span class="text-muted"><i class="bi bi-patch-check me-2 text-primary"></i>Certificación:</span>
+                            <span class="badge bg-primary">Original Garantizado</span>
+                        </li>
+                    </ul>
+
+                    <div class="d-flex flex-wrap gap-3">
+                        <button type="button" class="btn btn-success btn-lg px-4 py-3 fw-bold flex-grow-1 shadow-sm rounded-3" onclick="agregarAlCarrito('<?= addslashes($producto['nombre']) ?>')">
+                            <i class="bi bi-cart-plus-fill me-2"></i> Aprovechar Oferta Ahora
+                        </button>
+                        <a href="catalogo.php" class="btn btn-outline-secondary btn-lg px-4 py-3 fw-semibold rounded-3">
+                            <i class="bi bi-arrow-left me-1"></i> Volver al Catálogo
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Toast interactivo -->
+<div class="toast-container position-fixed bottom-0 end-0 p-3" style="z-index: 1080;">
+    <div id="toastCarrito" class="toast align-items-center text-bg-success border-0 shadow-lg" role="alert" aria-live="assertive" aria-atomic="true">
+        <div class="d-flex">
+            <div class="toast-body fs-6" id="toastMensaje">
+                <i class="bi bi-check-circle-fill me-2"></i> ¡Oferta añadida al carrito!
+            </div>
+            <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+        </div>
+    </div>
+</div>
+
+<script>
+    function agregarAlCarrito(nombreProducto) {
+        const toastElem = document.getElementById('toastCarrito');
+        const toastMensaje = document.getElementById('toastMensaje');
+        toastMensaje.innerHTML = `<i class="bi bi-check-circle-fill me-2"></i> ¡Oferta de <strong>${nombreProducto}</strong> reservada con éxito!`;
+        const toast = new bootstrap.Toast(toastElem);
+        toast.show();
+    }
+</script>

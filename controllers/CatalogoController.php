@@ -12,6 +12,7 @@ class CatalogoController extends BaseController {
 
     /**
      * Muestra el catálogo de productos con promociones y modales interactivos.
+     * Renderiza views/catalogo/listar.html
      */
     public function listar() {
         if (!isset($_SESSION['user_id'])) {
@@ -27,11 +28,40 @@ class CatalogoController extends BaseController {
             $error_db = $e->getMessage();
         }
 
-        $vista = file_exists(__DIR__ . '/../views/catalogo/listar.php') ? 'catalogo/listar' : 'catalogo';
-
-        $this->render($vista, [
+        $this->render('catalogo/listar', [
             'titulo' => 'Catálogo de Productos - Catálogo AP',
             'productos' => $productos,
+            'error_db' => $error_db,
+            'usuario_nombre' => $_SESSION['user_name'] ?? 'Usuario'
+        ]);
+    }
+
+    /**
+     * Muestra la vista detallada de un producto específico.
+     * Renderiza views/catalogo/detalle.html
+     */
+    public function detalle() {
+        if (!isset($_SESSION['user_id'])) {
+            $this->redirect('login.php');
+        }
+
+        $id = isset($_GET['id']) ? intval($_GET['id']) : 0;
+        $producto = null;
+        $error_db = null;
+
+        try {
+            $producto = $this->productoModel->obtenerPorId($id);
+        } catch (Exception $e) {
+            $error_db = $e->getMessage();
+        }
+
+        if (!$producto) {
+            $this->redirect('catalogo.php');
+        }
+
+        $this->render('catalogo/detalle', [
+            'titulo' => htmlspecialchars($producto['nombre']) . ' - Ficha de Producto',
+            'producto' => $producto,
             'error_db' => $error_db,
             'usuario_nombre' => $_SESSION['user_name'] ?? 'Usuario'
         ]);

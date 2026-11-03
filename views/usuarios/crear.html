@@ -1,18 +1,21 @@
-<div class="container py-4">
+<div class="container py-4 pb-5">
     <div class="row justify-content-center align-items-center">
-        <div class="col-md-7 col-lg-6">
-            <div class="card shadow-lg border-0">
-                <div class="card-header bg-primary text-white text-center py-3 rounded-top">
-                    <h3 class="mb-1"><i class="bi bi-person-plus-fill me-2"></i>Registro de Usuario</h3>
-                    <small class="text-white-50">Diligencia el formulario. Los datos se mantendrán si ocurre algún error.</small>
+        <div class="col-md-8 col-lg-7 col-xl-6">
+            <div class="card shadow-xl border-0 rounded-4 overflow-hidden register-card">
+                <div class="card-header bg-gradient-primary text-white text-center py-4">
+                    <div class="brand-avatar mx-auto mb-2 bg-white text-primary rounded-circle p-3 d-inline-flex align-items-center justify-content-center shadow-xs" style="width: 58px; height: 58px;">
+                        <i class="bi bi-person-plus-fill fs-3"></i>
+                    </div>
+                    <h3 class="mb-1 fw-bold text-white">Registro de Nuevo Usuario</h3>
+                    <small class="text-white-50">Diligencia el formulario. Los datos se conservan ante cualquier validación.</small>
                 </div>
-                <div class="card-body p-4 p-md-5">
+                <div class="card-body p-4 p-md-5 bg-white">
 
                     <?php if(!empty($mensaje)): ?>
-                        <div class="alert alert-<?= $tipo_mensaje ?> alert-dismissible fade show d-flex align-items-center" role="alert">
-                            <i class="bi <?= ($tipo_mensaje == 'success') ? 'bi-check-circle-fill' : 'bi-exclamation-triangle-fill' ?> me-2 fs-5"></i>
-                            <div><?= $mensaje ?></div>
-                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                        <div class="alert alert-<?= $tipo_mensaje ?> alert-dismissible fade show d-flex align-items-center shadow-xs rounded-3 mb-4" role="alert">
+                            <i class="bi <?= ($tipo_mensaje == 'success') ? 'bi-check-circle-fill' : 'bi-exclamation-triangle-fill' ?> me-2 fs-5 flex-shrink-0"></i>
+                            <div class="small fw-semibold"><?= $mensaje ?></div>
+                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Cerrar"></button>
                         </div>
                     <?php endif; ?>
 
@@ -21,11 +24,11 @@
                         
                         <!-- Número de Documento -->
                         <div class="mb-3">
-                            <label for="documento" class="form-label fw-semibold">
+                            <label for="documento" class="form-label fw-semibold text-dark small">
                                 <i class="bi bi-card-heading me-1 text-primary"></i>Número de Documento
                             </label>
                             <input type="text" 
-                                   class="form-control <?= isset($errores['documento']) ? 'is-invalid' : (!empty($datos['documento']) ? 'is-valid' : '') ?>" 
+                                   class="form-control rounded-3 <?= isset($errores['documento']) ? 'is-invalid' : (!empty($datos['documento']) ? 'is-valid' : '') ?>" 
                                    id="documento" 
                                    name="documento" 
                                    value="<?= htmlspecialchars($datos['documento'] ?? '') ?>" 
@@ -41,11 +44,11 @@
                         <!-- Nombres y Apellidos -->
                         <div class="row">
                             <div class="col-md-6 mb-3">
-                                <label for="nombre" class="form-label fw-semibold">
-                                    <i class="bi bi-person me-1 text-primary"></i>Nombre
+                                <label for="nombre" class="form-label fw-semibold text-dark small">
+                                    <i class="bi bi-person-fill me-1 text-primary"></i>Nombre
                                 </label>
                                 <input type="text" 
-                                       class="form-control <?= isset($errores['nombre']) ? 'is-invalid' : (!empty($datos['nombre']) ? 'is-valid' : '') ?>" 
+                                       class="form-control rounded-3 <?= isset($errores['nombre']) ? 'is-invalid' : (!empty($datos['nombre']) ? 'is-valid' : '') ?>" 
                                        id="nombre" 
                                        name="nombre" 
                                        value="<?= htmlspecialchars($datos['nombre'] ?? '') ?>" 
@@ -58,11 +61,11 @@
                                 <?php endif; ?>
                             </div>
                             <div class="col-md-6 mb-3">
-                                <label for="apellidos" class="form-label fw-semibold">
-                                    <i class="bi bi-person me-1 text-primary"></i>Apellidos
+                                <label for="apellidos" class="form-label fw-semibold text-dark small">
+                                    <i class="bi bi-person-fill me-1 text-primary"></i>Apellidos
                                 </label>
                                 <input type="text" 
-                                       class="form-control <?= isset($errores['apellidos']) ? 'is-invalid' : (!empty($datos['apellidos']) ? 'is-valid' : '') ?>" 
+                                       class="form-control rounded-3 <?= isset($errores['apellidos']) ? 'is-invalid' : (!empty($datos['apellidos']) ? 'is-valid' : '') ?>" 
                                        id="apellidos" 
                                        name="apellidos" 
                                        value="<?= htmlspecialchars($datos['apellidos'] ?? '') ?>" 
@@ -78,11 +81,11 @@
 
                         <!-- Correo Electrónico -->
                         <div class="mb-3">
-                            <label for="correo" class="form-label fw-semibold">
-                                <i class="bi bi-envelope me-1 text-primary"></i>Correo Electrónico
+                            <label for="correo" class="form-label fw-semibold text-dark small">
+                                <i class="bi bi-envelope-fill me-1 text-primary"></i>Correo Electrónico
                             </label>
                             <input type="email" 
-                                   class="form-control <?= isset($errores['correo']) ? 'is-invalid' : (!empty($datos['correo']) ? 'is-valid' : '') ?>" 
+                                   class="form-control rounded-3 <?= isset($errores['correo']) ? 'is-invalid' : (!empty($datos['correo']) ? 'is-valid' : '') ?>" 
                                    id="correo" 
                                    name="correo" 
                                    value="<?= htmlspecialchars($datos['correo'] ?? '') ?>" 
@@ -98,13 +101,13 @@
                         <!-- Ciudad y País (Catálogo y Autocompletado) -->
                         <div class="row">
                             <div class="col-md-6 mb-3">
-                                <label for="ciudad" class="form-label fw-semibold">
+                                <label for="ciudad" class="form-label fw-semibold text-dark small">
                                     <i class="bi bi-geo-alt-fill me-1 text-primary"></i>Ciudad
                                     <span class="badge bg-secondary-subtle text-primary border" style="font-size: 0.72rem;">Catálogo</span>
                                 </label>
                                 <input list="lista-ciudades" 
                                        type="text" 
-                                       class="form-control <?= isset($errores['ciudad']) ? 'is-invalid' : (!empty($datos['ciudad']) ? 'is-valid' : '') ?>" 
+                                       class="form-control rounded-3 <?= isset($errores['ciudad']) ? 'is-invalid' : (!empty($datos['ciudad']) ? 'is-valid' : '') ?>" 
                                        id="ciudad" 
                                        name="ciudad" 
                                        value="<?= htmlspecialchars($datos['ciudad'] ?? '') ?>" 
@@ -143,12 +146,12 @@
                             </div>
 
                             <div class="col-md-6 mb-3">
-                                <label for="pais" class="form-label fw-semibold">
+                                <label for="pais" class="form-label fw-semibold text-dark small">
                                     <i class="bi bi-flag-fill me-1 text-primary"></i>País
                                     <span class="badge bg-success" style="font-size: 0.72rem;">Autocompletado</span>
                                 </label>
                                 <input type="text" 
-                                       class="form-control bg-light <?= isset($errores['pais']) ? 'is-invalid' : (!empty($datos['pais']) ? 'is-valid' : '') ?>" 
+                                       class="form-control rounded-3 bg-light <?= isset($errores['pais']) ? 'is-invalid' : (!empty($datos['pais']) ? 'is-valid' : '') ?>" 
                                        id="pais" 
                                        name="pais" 
                                        value="<?= htmlspecialchars($datos['pais'] ?? '') ?>" 
@@ -170,11 +173,11 @@
                         <!-- Contraseñas -->
                         <div class="row">
                             <div class="col-md-6 mb-3">
-                                <label for="password" class="form-label fw-semibold">
-                                    <i class="bi bi-lock me-1 text-primary"></i>Contraseña
+                                <label for="password" class="form-label fw-semibold text-dark small">
+                                    <i class="bi bi-lock-fill me-1 text-primary"></i>Contraseña
                                 </label>
                                 <input type="password" 
-                                       class="form-control <?= isset($errores['password']) ? 'is-invalid' : '' ?>" 
+                                       class="form-control rounded-3 <?= isset($errores['password']) ? 'is-invalid' : '' ?>" 
                                        id="password" 
                                        name="password" 
                                        placeholder="Mínimo 6 caracteres" 
@@ -186,11 +189,11 @@
                                 <?php endif; ?>
                             </div>
                             <div class="col-md-6 mb-3">
-                                <label for="confirm_password" class="form-label fw-semibold">
-                                    <i class="bi bi-shield-check me-1 text-primary"></i>Confirmar Contraseña
+                                <label for="confirm_password" class="form-label fw-semibold text-dark small">
+                                    <i class="bi bi-shield-lock-fill me-1 text-primary"></i>Confirmar Contraseña
                                 </label>
                                 <input type="password" 
-                                       class="form-control <?= isset($errores['confirm_password']) ? 'is-invalid' : '' ?>" 
+                                       class="form-control rounded-3 <?= isset($errores['confirm_password']) ? 'is-invalid' : '' ?>" 
                                        id="confirm_password" 
                                        name="confirm_password" 
                                        placeholder="Repite la contraseña" 
@@ -203,14 +206,14 @@
                             </div>
                         </div>
 
-                        <button type="submit" class="btn btn-primary w-100 py-2 fw-semibold mt-2 shadow-sm">
-                            <i class="bi bi-check2-circle me-1"></i> Registrarse
+                        <button type="submit" class="btn btn-primary w-100 py-3 fw-bold rounded-3 shadow-sm mt-3 d-flex align-items-center justify-content-center">
+                            <i class="bi bi-check2-circle me-2 fs-5"></i> Completar Registro
                         </button>
                     </form>
 
-                    <div class="text-center mt-4">
-                        <p class="mb-0 text-muted">¿Ya tienes una cuenta? <a href="login.php" class="fw-bold text-decoration-none">Inicia sesión aquí</a></p>
-                        <p class="mt-2 mb-0"><a href="index.php" class="text-muted small text-decoration-none"><i class="bi bi-arrow-left"></i> Volver al inicio</a></p>
+                    <div class="text-center mt-4 pt-3 border-top">
+                        <p class="mb-1 text-muted small">¿Ya tienes una cuenta? <a href="login.php" class="fw-bold text-primary text-decoration-none">Inicia sesión aquí</a></p>
+                        <p class="mb-0"><a href="index.php" class="text-muted very-small text-decoration-none"><i class="bi bi-arrow-left me-1"></i>Volver al inicio</a></p>
                     </div>
                 </div>
             </div>

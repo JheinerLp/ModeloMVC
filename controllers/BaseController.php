@@ -15,33 +15,26 @@ class BaseController {
     }
 
     /**
-     * Renderiza una vista en formato .html (o .php como fallback) dentro de la plantilla maestra (views/layouts/plantilla.html).
+     * Renderiza una vista exclusivamente en formato .html dentro de la plantilla maestra (views/layouts/plantilla.html).
      */
     protected function render($vista, $datos = [], $usarPlantilla = true) {
         extract($datos);
 
-        // Buscar primero la vista en formato .html, luego .php
+        // En la arquitectura MVC las vistas son exclusivamente archivos .html
         $vistaPath = __DIR__ . '/../views/' . $vista . '.html';
-        if (!file_exists($vistaPath)) {
-            $vistaPath = __DIR__ . '/../views/' . $vista . '.php';
-        }
 
         if (!file_exists($vistaPath)) {
-            die("Error: La vista '{$vista}' no fue encontrada en formato .html ni .php en " . __DIR__ . "/../views/{$vista}.html");
+            die("Error MVC: La vista '{$vista}' no fue encontrada en formato .html en " . __DIR__ . "/../views/{$vista}.html");
         }
 
         if ($usarPlantilla) {
-            // Capturar el contenido procesado de la vista .html
+            // Capturar el contenido renderizado de la vista .html
             ob_start();
             require $vistaPath;
             $contenido = ob_get_clean();
 
-            // Buscar la plantilla maestra en formato .html, luego .php
+            // Cargar la plantilla maestra .html
             $plantillaPath = __DIR__ . '/../views/layouts/plantilla.html';
-            if (!file_exists($plantillaPath)) {
-                $plantillaPath = __DIR__ . '/../views/layouts/plantilla.php';
-            }
-
             if (file_exists($plantillaPath)) {
                 require $plantillaPath;
             } else {

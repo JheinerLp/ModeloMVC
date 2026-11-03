@@ -61,7 +61,7 @@ class Usuario {
      */
     public function buscarPorCorreo($correo) {
         if (!$this->db) return null;
-        $query = "SELECT id, documento, nombre, apellidos, correo, password FROM usuarios WHERE correo = :correo LIMIT 1";
+        $query = "SELECT id, documento, nombre, apellidos, correo, ciudad, pais, password FROM usuarios WHERE correo = :correo LIMIT 1";
         $stmt = $this->db->prepare($query);
         $stmt->bindParam(':correo', $correo);
         $stmt->execute();

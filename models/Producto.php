@@ -23,6 +23,21 @@ class Producto {
     }
 
     /**
+     * Obtiene un producto por su identificador único ID.
+     */
+    public function obtenerPorId($id) {
+        if (!$this->db) {
+            throw new Exception("No se pudo conectar a la base de datos MySQL.");
+        }
+        $query = "SELECT * FROM productos WHERE id = :id AND activo = TRUE LIMIT 1";
+        $stmt = $this->db->prepare($query);
+        $stmt->bindValue(':id', intval($id), PDO::PARAM_INT);
+        $stmt->execute();
+        $producto = $stmt->fetch(PDO::FETCH_ASSOC);
+        return $producto ?: null;
+    }
+
+    /**
      * Retorna el icono Bootstrap correspondiente a la categoría del producto.
      */
     public static function obtenerIconoCategoria($categoria) {
@@ -30,7 +45,8 @@ class Producto {
         if (strpos($cat, 'electr') !== false) return 'bi-laptop';
         if (strpos($cat, 'acces') !== false) return 'bi-headphones';
         if (strpos($cat, 'wear') !== false || strpos($cat, 'reloj') !== false) return 'bi-smartwatch';
-        if (strpos($cat, 'foto') !== false || strpos($cat, 'cámara') !== false) return 'bi-camera';
+        if (strpos($cat, 'foto') !== false || strpos($cat, 'cámara') !== false || strpos($cat, 'camara') !== false) return 'bi-camera';
+        if (strpos($cat, 'audio') !== false || strpos($cat, 'sonido') !== false) return 'bi-speaker';
         return 'bi-box-seam';
     }
 

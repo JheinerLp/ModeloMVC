@@ -17,6 +17,8 @@ class Router {
                 'usuarios/listar'   => ['UsuarioController', 'listar'],
                 'usuarios/editar'   => ['UsuarioController', 'editar'],
                 'catalogo'          => ['CatalogoController', 'listar'],
+                'catalogo/detalle'  => ['CatalogoController', 'detalle'],
+                'producto'          => ['CatalogoController', 'detalle'],
                 'logout'            => ['UsuarioController', 'logout'],
             ],
             'POST' => [

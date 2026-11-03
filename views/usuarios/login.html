@@ -1,45 +1,49 @@
-<div class="container py-4">
+<div class="container py-5">
     <div class="row justify-content-center align-items-center">
-        <div class="col-md-5 col-lg-4">
-            <div class="card shadow-lg border-0">
-                <div class="card-header bg-primary text-white text-center py-3 rounded-top">
-                    <h3 class="mb-0"><i class="bi bi-box-arrow-in-right me-2"></i>Iniciar Sesión</h3>
-                    <small class="text-white-50">Ingresa tus credenciales</small>
+        <div class="col-md-6 col-lg-5 col-xl-4">
+            <div class="card shadow-xl border-0 rounded-4 overflow-hidden login-card">
+                <div class="card-header bg-gradient-primary text-white text-center py-4">
+                    <div class="brand-avatar mx-auto mb-2 bg-white text-primary rounded-circle p-3 d-inline-flex align-items-center justify-content-center shadow-xs" style="width: 58px; height: 58px;">
+                        <i class="bi bi-person-fill-lock fs-3"></i>
+                    </div>
+                    <h3 class="mb-1 fw-bold text-white">Iniciar Sesión</h3>
+                    <small class="text-white-50">Ingresa tus credenciales para acceder al catálogo</small>
                 </div>
-                <div class="card-body p-4 p-md-5">
+                <div class="card-body p-4 p-md-5 bg-white">
                     
                     <?php if(!empty($mensaje)): ?>
-                        <div class="alert alert-<?= $tipo_mensaje ?> alert-dismissible fade show d-flex align-items-center" role="alert">
-                            <i class="bi bi-exclamation-triangle-fill me-2 fs-5"></i>
-                            <div><?= $mensaje ?></div>
-                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                        <div class="alert alert-<?= $tipo_mensaje ?> alert-dismissible fade show d-flex align-items-center shadow-xs rounded-3 mb-4" role="alert">
+                            <i class="bi bi-exclamation-triangle-fill me-2 fs-5 flex-shrink-0"></i>
+                            <div class="small fw-semibold"><?= $mensaje ?></div>
+                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Cerrar"></button>
                         </div>
                     <?php endif; ?>
                     
                     <form method="POST" action="login.php">
                         <input type="hidden" name="csrf_token" value="<?= htmlspecialchars($_SESSION['csrf_token'] ?? '') ?>">
-                        <div class="mb-3">
-                            <label for="correo" class="form-label fw-semibold">
-                                <i class="bi bi-envelope me-1 text-primary"></i>Correo Electrónico
-                            </label>
-                            <input type="email" class="form-control" id="correo" name="correo" value="<?= htmlspecialchars($correo ?? '') ?>" placeholder="nombre@correo.com" required>
-                        </div>
                         
                         <div class="mb-3">
-                            <label for="password" class="form-label fw-semibold">
-                                <i class="bi bi-lock me-1 text-primary"></i>Contraseña
+                            <label for="correo" class="form-label fw-semibold text-dark small">
+                                <i class="bi bi-envelope-fill me-1 text-primary"></i>Correo Electrónico
                             </label>
-                            <input type="password" class="form-control" id="password" name="password" placeholder="Tu contraseña" required>
+                            <input type="email" class="form-control form-control-lg rounded-3 fs-6" id="correo" name="correo" value="<?= htmlspecialchars($correo ?? '') ?>" placeholder="nombre@correo.com" required autocomplete="email">
                         </div>
                         
-                        <button type="submit" class="btn btn-primary w-100 py-2 fw-semibold mt-2 shadow-sm">
-                            <i class="bi bi-box-arrow-in-right me-1"></i> Entrar
+                        <div class="mb-4">
+                            <label for="password" class="form-label fw-semibold text-dark small">
+                                <i class="bi bi-key-fill me-1 text-primary"></i>Contraseña
+                            </label>
+                            <input type="password" class="form-control form-control-lg rounded-3 fs-6" id="password" name="password" placeholder="Tu contraseña" required autocomplete="current-password">
+                        </div>
+                        
+                        <button type="submit" class="btn btn-primary w-100 py-3 fw-bold rounded-3 shadow-sm d-flex align-items-center justify-content-center">
+                            <i class="bi bi-box-arrow-in-right me-2"></i> Iniciar Sesión
                         </button>
                     </form>
                     
-                    <div class="text-center mt-4">
-                        <p class="mb-1 text-muted">¿No tienes cuenta? <a href="registro.php" class="fw-bold text-decoration-none">Regístrate aquí</a></p>
-                        <p class="mb-0"><a href="index.php" class="text-muted small text-decoration-none"><i class="bi bi-arrow-left"></i> Volver al inicio</a></p>
+                    <div class="text-center mt-4 pt-3 border-top">
+                        <p class="mb-1 text-muted small">¿No tienes cuenta? <a href="registro.php" class="fw-bold text-primary text-decoration-none">Regístrate gratis</a></p>
+                        <p class="mb-0"><a href="index.php" class="text-muted very-small text-decoration-none"><i class="bi bi-arrow-left me-1"></i>Volver al inicio</a></p>
                     </div>
                 </div>
             </div>

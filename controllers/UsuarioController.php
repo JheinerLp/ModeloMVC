@@ -44,7 +44,7 @@ class UsuarioController extends BaseController {
             'pais' => ''
         ];
 
-        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+        if (($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'POST') {
             $csrf_token = $_POST['csrf_token'] ?? '';
             if (!$this->validarCsrfToken($csrf_token)) {
                 $errores['seguridad'] = 'Error de seguridad: Token CSRF inválido o expirado. Por favor recarga el formulario.';
@@ -117,9 +117,7 @@ class UsuarioController extends BaseController {
 
         $catalogo_ciudades = Usuario::getCatalogoCiudades();
 
-        $vista = file_exists(__DIR__ . '/../views/usuarios/crear.php') ? 'usuarios/crear' : 'registro';
-
-        $this->render($vista, [
+        $this->render('usuarios/crear', [
             'titulo' => 'Registro de Usuario - Catálogo AP',
             'mensaje' => $mensaje,
             'tipo_mensaje' => $tipo_mensaje,
@@ -149,7 +147,7 @@ class UsuarioController extends BaseController {
         $tipo_mensaje = '';
         $correo = '';
 
-        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+        if (($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'POST') {
             $csrf_token = $_POST['csrf_token'] ?? '';
             if (!$this->validarCsrfToken($csrf_token)) {
                 $mensaje = 'Error de seguridad: Token CSRF inválido o expirado. Por favor intenta de nuevo.';
@@ -189,9 +187,7 @@ class UsuarioController extends BaseController {
             }
         }
 
-        $vista = file_exists(__DIR__ . '/../views/usuarios/login.php') ? 'usuarios/login' : 'login';
-
-        $this->render($vista, [
+        $this->render('usuarios/login', [
             'titulo' => 'Iniciar Sesión - Catálogo AP',
             'mensaje' => $mensaje,
             'tipo_mensaje' => $tipo_mensaje,

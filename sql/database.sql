@@ -36,3 +36,8 @@ INSERT INTO productos (nombre, descripcion, precio_normal, precio_promo, imagen,
 ('Smartwatch Fitness', 'Reloj inteligente con monitor de salud', 299.00, 199.99, 'smartwatch.jpg', 'Wearables', '2026-09-20', '2026-10-20'),
 ('Cámara Digital 4K', 'Cámara profesional con grabación 4K', 799.00, 599.99, 'camara.jpg', 'Fotografía', '2026-09-01', '2026-12-31'),
 ('Tablet Pro 11"', 'Tablet con pantalla de 11 pulgadas y stylus', 649.00, 499.99, 'tablet.jpg', 'Electrónica', '2026-09-10', '2026-10-10');
+
+-- Usuario demo de prueba (contraseña: admin123)
+INSERT INTO usuarios (documento, nombre, apellidos, correo, ciudad, pais, password) VALUES
+('1020304050', 'Usuario', 'Demo', 'admin@correo.com', 'Bogotá', 'Colombia', '$2y$10$4kOPfYbOapQFzkmJygz2vOnRxhaJq0i4xwUaRGoFsfNh8c.Dp2Wd.')
+ON DUPLICATE KEY UPDATE nombre = VALUES(nombre);
